@@ -1,0 +1,6 @@
+name: everquest
+description: |
+  Semantic conventions for EverQuest telemetry emitted by the Zeal client
+  (OTLP/HTTP). Defines the `eq.*` attribute registry and telemetry signals
+  (metrics, logs, spans) used by the EverQuest observability stack.
+schema_url: https://raw.githubusercontent.com/jensholdgaard/everquest-semconv/main/schema/0.1.0.yaml

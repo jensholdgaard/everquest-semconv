@@ -1,0 +1,17 @@
+groups:
+  - id: metric.eq.combat.damage
+    type: metric
+    metric_name: eq.combat.damage
+    stability: development
+    brief: >
+      Total combat damage dealt or received by the player, accumulated from the
+      in-game combat log. Aggregating across all attributes yields total hit
+      points of damage; split by `eq.combat.direction` to separate the player's
+      output (DPS) from damage taken.
+    instrument: counter
+    unit: "{hitpoint}"
+    attributes:
+      - ref: eq.combat.direction
+        requirement_level: required
+      - ref: eq.combat.damage.type
+        requirement_level: recommended

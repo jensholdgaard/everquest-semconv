@@ -1,0 +1,77 @@
+groups:
+  - id: registry.eq
+    type: attribute_group
+    display_name: EverQuest Attributes
+    brief: >
+      Attributes describing EverQuest telemetry emitted by the Zeal client.
+    attributes:
+      - id: eq.character.name
+        type: string
+        stability: development
+        brief: The name of the player character the telemetry was emitted for.
+        examples: ["Controels", "Scryll"]
+        note: |
+          > [!WARNING]
+          >
+          > Character names are user-chosen handles and MAY be considered
+          > personal data depending on the server and jurisdiction.
+
+      - id: eq.character.class
+        type: string
+        stability: development
+        brief: The character's class (archetype).
+        examples: ["Bard", "Cleric", "Warrior"]
+
+      - id: eq.zone.id
+        type: int
+        stability: development
+        brief: The numeric identifier of the zone the character is currently in.
+        examples: [169, 1]
+
+      - id: eq.zone.name
+        type: string
+        stability: development
+        brief: The human-readable short name of the zone the character is in.
+        examples: ["Mons Letalis", "North Qeynos"]
+
+      - id: eq.chat.color
+        type: int
+        stability: development
+        brief: >
+          The EverQuest chat color index of a log line, identifying the message
+          channel/category (e.g. spell, melee, system).
+        examples: [273, 0]
+
+      - id: eq.combat.direction
+        type:
+          members:
+            - id: outgoing
+              value: "outgoing"
+              stability: development
+              brief: Damage dealt by the player.
+            - id: incoming
+              value: "incoming"
+              stability: development
+              brief: Damage received by the player.
+        stability: development
+        brief: Direction of combat damage relative to the player.
+
+      - id: eq.combat.damage.type
+        type: string
+        stability: development
+        brief: >
+          The kind of damage, derived from the combat message verb or source
+          (e.g. the melee attack type, or "spell" for spell damage).
+        examples: ["slash", "crush", "pierce", "bash", "spell"]
+
+      - id: eq.spell.name
+        type: string
+        stability: development
+        brief: The name of the spell or song involved in the telemetry.
+        examples: ["Chant of Battle", "Complete Heal"]
+
+      - id: eq.discipline.name
+        type: string
+        stability: development
+        brief: The name of the combat discipline that is active.
+        examples: ["Defensive", "Evasive"]
