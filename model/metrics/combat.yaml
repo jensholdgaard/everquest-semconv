@@ -10,6 +10,8 @@ groups:
       output (DPS) from damage taken.
     instrument: counter
     unit: "{hitpoint}"
+    entity_associations:
+      - eq.character
     attributes:
       - ref: eq.combat.direction
         requirement_level: required

@@ -9,6 +9,8 @@ groups:
       without putting item identity into metric attributes.
     instrument: gauge
     unit: "1"
+    entity_associations:
+      - eq.character
 
   - id: metric.eq.character.haste
     type: metric
@@ -19,3 +21,5 @@ groups:
       overhaste), as a percentage. Gauge, sampled over time for DPS correlation.
     instrument: gauge
     unit: "%"
+    entity_associations:
+      - eq.character
