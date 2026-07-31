@@ -13,6 +13,8 @@ groups:
     entity_associations:
       - eq.character
     attributes:
+      - ref: eq.combat.source
+        requirement_level: recommended
       - ref: eq.combat.direction
         requirement_level: required
       - ref: eq.combat.damage.type

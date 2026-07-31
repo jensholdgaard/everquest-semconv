@@ -68,19 +68,27 @@ groups:
           channel/category (e.g. spell, melee, system).
         examples: [273, 0]
 
+      - id: eq.combat.source
+        type: string
+        stability: development
+        brief: >
+          The attacker that dealt the damage (a player, pet, or NPC name). For the local
+          character's own swings this is the character name. Enables per-source DPS.
+        examples: ["Abuelo", "Controels", "a temple guard"]
+
       - id: eq.combat.direction
         type:
           members:
             - id: outgoing
               value: "outgoing"
               stability: development
-              brief: Damage dealt by the player.
+              brief: Damage dealt by the source (onto its target).
             - id: incoming
               value: "incoming"
               stability: development
-              brief: Damage received by the player.
+              brief: Damage received by the local player.
         stability: development
-        brief: Direction of combat damage relative to the player.
+        brief: Direction of combat damage relative to the local player.
 
       - id: eq.combat.damage.type
         type: string
