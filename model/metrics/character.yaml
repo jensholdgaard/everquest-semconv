@@ -1,0 +1,21 @@
+groups:
+  - id: metric.eq.character.attack
+    type: metric
+    metric_name: eq.character.attack
+    stability: development
+    brief: >
+      The character's current offense (attack) rating. A gauge so it can be
+      overlaid against `eq.combat.damage` to correlate DPS with gear and buffs,
+      without putting item identity into metric attributes.
+    instrument: gauge
+    unit: "1"
+
+  - id: metric.eq.character.haste
+    type: metric
+    metric_name: eq.character.haste
+    stability: development
+    brief: >
+      The character's current total effective melee haste (worn + spell +
+      overhaste), as a percentage. Gauge, sampled over time for DPS correlation.
+    instrument: gauge
+    unit: "%"

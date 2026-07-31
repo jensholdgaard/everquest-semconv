@@ -22,6 +22,32 @@ groups:
         brief: The character's class (archetype).
         examples: ["Bard", "Cleric", "Warrior"]
 
+      - id: eq.character.level
+        type: int
+        stability: development
+        brief: The character's level.
+        examples: [60, 1]
+
+      - id: eq.character.deity
+        type: int
+        stability: development
+        brief: The numeric identifier of the character's deity.
+        examples: [201, 396]
+
+      - id: eq.character.aa.unspent
+        type: int
+        stability: development
+        brief: The number of unspent Alternate Advancement (AA) points.
+        examples: [0, 12]
+
+      - id: eq.character.stat
+        type: template[int]
+        stability: development
+        brief: >
+          A character base stat. The final key segment is the stat name, e.g.
+          `eq.character.stat.strength`.
+        examples: [90, 115]
+
       - id: eq.zone.id
         type: int
         stability: development
