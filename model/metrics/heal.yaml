@@ -1,0 +1,19 @@
+groups:
+  - id: metric.eq.combat.heal
+    type: metric
+    metric_name: eq.combat.heal
+    stability: development
+    brief: >
+      Total healing done or received by the player, accumulated from caster-side heal messages.
+      Only the involved client sees heal amounts, so each player self-reports — the shared meter
+      sums cleanly without double counting. `eq.combat.direction` outgoing = healing done,
+      incoming = healing received.
+    instrument: counter
+    unit: "{hitpoint}"
+    entity_associations:
+      - eq.character
+    attributes:
+      - ref: eq.combat.source
+        requirement_level: recommended
+      - ref: eq.combat.direction
+        requirement_level: required
