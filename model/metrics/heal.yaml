@@ -17,3 +17,5 @@ groups:
         requirement_level: recommended
       - ref: eq.combat.direction
         requirement_level: required
+      - ref: eq.zone.name
+        requirement_level: recommended
