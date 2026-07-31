@@ -96,6 +96,15 @@ groups:
           Classification of the damage source from the client's live entity list — lets a shared
           meter filter to players without heuristics.
 
+      - id: eq.combat.target
+        type: string
+        stability: development
+        brief: >
+          The spawn the damage was dealt to. From the hit event this is the raw spawn name with
+          its instance suffix (e.g. `a_temple_guard00`), so individual mobs of the same name are
+          distinguishable; DoT ticks parsed from chat carry the display name without the suffix.
+        examples: ["a_temple_guard00", "A Shissar Revenant"]
+
       - id: eq.combat.direction
         type:
           members:

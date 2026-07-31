@@ -21,5 +21,7 @@ groups:
         requirement_level: required
       - ref: eq.combat.damage.type
         requirement_level: recommended
+      - ref: eq.combat.target
+        requirement_level: opt_in
       - ref: eq.zone.name
         requirement_level: recommended
