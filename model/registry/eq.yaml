@@ -72,9 +72,29 @@ groups:
         type: string
         stability: development
         brief: >
-          The attacker that dealt the damage (a player, pet, or NPC name). For the local
-          character's own swings this is the character name. Enables per-source DPS.
+          The attacker credited with the damage. Pets are rolled into their owner (via the live
+          pet→owner link), so a pet's damage is credited to the owning player. Enables per-source DPS.
         examples: ["Abuelo", "Controels", "a temple guard"]
+
+      - id: eq.combat.source_type
+        type:
+          members:
+            - id: player
+              value: "player"
+              stability: development
+              brief: The source is a player character (or a player's pet, rolled into the player).
+            - id: npc
+              value: "npc"
+              stability: development
+              brief: The source is an NPC.
+            - id: unknown
+              value: "unknown"
+              stability: development
+              brief: The source could not be matched in the live entity list.
+        stability: development
+        brief: >
+          Classification of the damage source from the client's live entity list — lets a shared
+          meter filter to players without heuristics.
 
       - id: eq.combat.direction
         type:
