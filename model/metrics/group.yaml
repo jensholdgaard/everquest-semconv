@@ -1,0 +1,25 @@
+groups:
+  - id: metric.everquest.group.member
+    type: metric
+    metric_name: everquest.group.member
+    stability: development
+    brief: >
+      Membership of the reporting character's group: one data point of value 1 per
+      member, including the reporting character.
+    note: >
+      Emitted so that consumers can see who is *in* a group, not merely the subset of
+      it that runs the exporter: a member without the client produces no combat
+      telemetry at all, yet still appears here. Comparing this roster with the set of
+      characters reporting damage is what makes "4 of 6 reporting" expressible, which
+      in turn explains an otherwise suspiciously low group total.
+
+      Modelled as a non-monotonic sum rather than a gauge, following the OpenTelemetry
+      Prometheus compatibility specification for info-style metrics: the value 1 is
+      meant to be read as a count, so aggregating away the character attribute yields
+      the group size.
+    instrument: updowncounter
+    unit: "{member}"
+    attributes:
+      - ref: everquest.group.leader
+      - ref: everquest.character.name
+      - ref: everquest.zone.name

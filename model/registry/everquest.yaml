@@ -136,6 +136,19 @@ groups:
           shields carry no spell id at all).
         examples: ["slash", "crush", "pierce", "spell", "dot", "damage_shield"]
 
+      - id: everquest.group.leader
+        type: string
+        stability: development
+        brief: >
+          Name of the group's leader, which identifies the group the telemetry was
+          produced in. Omitted entirely when the character is not grouped.
+        note: >
+          The leader names the group in preference to a hash of the roster: a roster
+          identifier changes the moment anyone joins or leaves, splitting a timeseries
+          mid-fight, whereas leadership rarely changes hands. Raids are not covered -
+          each of a raid's groups reports its own leader.
+        examples: ["Controels", "Zigzap"]
+
       - id: everquest.fight.outcome
         type:
           members:
