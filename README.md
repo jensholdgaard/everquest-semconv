@@ -18,7 +18,8 @@ model/
   manifest.yaml               # registry manifest (name, description, schema_url)
   registry/everquest.yaml     # the everquest.* attribute registry
   registry/entities.yaml      # the everquest.character entity
-  metrics/combat.yaml         # everquest.combat.damage / .heal
+  metrics/combat.yaml         # everquest.combat.damage
+  metrics/heal.yaml           # everquest.combat.heal
   metrics/character.yaml      # everquest.character.attack / .haste
   metrics/group.yaml          # everquest.group.member
   spans.yaml                  # zone session and fight spans
