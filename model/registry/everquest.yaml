@@ -123,9 +123,18 @@ groups:
         type: string
         stability: development
         brief: >
-          The kind of damage, derived from the combat message verb or source
-          (e.g. the melee attack type, or "spell" for spell damage).
-        examples: ["slash", "crush", "pierce", "bash", "spell"]
+          The kind of damage: the melee skill used ("slash", "crush", "pierce",
+          "bash", "kick", "backstab", "archery", "hth", "special", or "melee"
+          for anything unrecognised), "spell" for direct spell damage, "dot" for
+          a damage-over-time tick, or "damage_shield" for retaliatory damage
+          shield damage.
+        note: >
+          Damage shields are identified by the damage packet carrying a
+          DmgShieldType (244-249) in the field that otherwise holds a SkillType.
+          Without that test they are indistinguishable from spell damage (a
+          buff-granted shield carries a spell id) or from melee (item and innate
+          shields carry no spell id at all).
+        examples: ["slash", "crush", "pierce", "spell", "dot", "damage_shield"]
 
       - id: everquest.fight.outcome
         type:
