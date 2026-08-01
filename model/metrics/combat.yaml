@@ -1,27 +1,27 @@
 groups:
-  - id: metric.eq.combat.damage
+  - id: metric.everquest.combat.damage
     type: metric
-    metric_name: eq.combat.damage
+    metric_name: everquest.combat.damage
     stability: development
     brief: >
       Total combat damage dealt or received by the player, accumulated from the
       in-game combat log. Aggregating across all attributes yields total hit
-      points of damage; split by `eq.combat.direction` to separate the player's
+      points of damage; split by `everquest.combat.direction` to separate the player's
       output (DPS) from damage taken.
     instrument: counter
     unit: "{hitpoint}"
     entity_associations:
-      - eq.character
+      - everquest.character
     attributes:
-      - ref: eq.combat.source
+      - ref: everquest.combat.source
         requirement_level: recommended
-      - ref: eq.combat.source_type
+      - ref: everquest.combat.source_type
         requirement_level: recommended
-      - ref: eq.combat.direction
+      - ref: everquest.combat.direction
         requirement_level: required
-      - ref: eq.combat.damage.type
+      - ref: everquest.combat.damage.type
         requirement_level: recommended
-      - ref: eq.combat.target
+      - ref: everquest.combat.target
         requirement_level: opt_in
-      - ref: eq.zone.name
+      - ref: everquest.zone.name
         requirement_level: recommended

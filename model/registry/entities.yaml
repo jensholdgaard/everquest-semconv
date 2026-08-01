@@ -1,20 +1,20 @@
 groups:
-  - id: entity.eq.character
+  - id: entity.everquest.character
     type: entity
-    name: eq.character
+    name: everquest.character
     stability: development
     brief: >
       An EverQuest player character — the entity that telemetry is produced for.
       Its identifying and descriptive attributes are carried as OTLP resource
       attributes on every signal.
     attributes:
-      - ref: eq.character.name
+      - ref: everquest.character.name
         role: identifying
-      - ref: eq.character.class
+      - ref: everquest.character.class
         role: descriptive
-      - ref: eq.character.level
+      - ref: everquest.character.level
         role: descriptive
-      - ref: eq.character.deity
+      - ref: everquest.character.deity
         role: descriptive
-      - ref: eq.character.aa.unspent
+      - ref: everquest.character.aa.unspent
         role: descriptive

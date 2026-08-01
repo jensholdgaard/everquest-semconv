@@ -1,20 +1,20 @@
 groups:
-  - id: metric.eq.character.attack
+  - id: metric.everquest.character.attack
     type: metric
-    metric_name: eq.character.attack
+    metric_name: everquest.character.attack
     stability: development
     brief: >
       The character's current offense (attack) rating. A gauge so it can be
-      overlaid against `eq.combat.damage` to correlate DPS with gear and buffs,
+      overlaid against `everquest.combat.damage` to correlate DPS with gear and buffs,
       without putting item identity into metric attributes.
     instrument: gauge
     unit: "1"
     entity_associations:
-      - eq.character
+      - everquest.character
 
-  - id: metric.eq.character.haste
+  - id: metric.everquest.character.haste
     type: metric
-    metric_name: eq.character.haste
+    metric_name: everquest.character.haste
     stability: development
     brief: >
       The character's current total effective melee haste (worn + spell +
@@ -22,4 +22,4 @@ groups:
     instrument: gauge
     unit: "%"
     entity_associations:
-      - eq.character
+      - everquest.character

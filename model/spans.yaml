@@ -1,0 +1,30 @@
+groups:
+  - id: span.everquest.zone.session
+    type: span
+    span_kind: internal
+    stability: development
+    brief: >
+      One span per zone visit by the reporting player: from entering the zone to leaving it.
+      Serves as the trace root; fights in the zone are child spans.
+    attributes:
+      - ref: everquest.zone.name
+        requirement_level: required
+
+  - id: span.everquest.fight
+    type: span
+    span_kind: internal
+    stability: development
+    brief: >
+      An encounter with a specific spawn: opens at the first damage involving it and closes on a
+      slain message, 30s of inactivity, or zoning. Child of the zone-session span.
+    attributes:
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.fight.outcome
+        requirement_level: required
+      - ref: everquest.fight.damage.dealt
+        requirement_level: recommended
+      - ref: everquest.fight.damage.taken
+        requirement_level: recommended

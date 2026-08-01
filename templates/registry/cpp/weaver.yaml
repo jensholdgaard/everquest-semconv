@@ -1,0 +1,9 @@
+# Weaver forge config: emit a single C++ header of name constants from this registry.
+templates:
+  - pattern: everquest_semconv.h.j2
+    filter: >
+      {
+        attributes: semconv_attributes,
+        metrics: semconv_metrics
+      }
+    application_mode: single

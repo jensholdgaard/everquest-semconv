@@ -1,11 +1,11 @@
 groups:
-  - id: registry.eq
+  - id: registry.everquest
     type: attribute_group
     display_name: EverQuest Attributes
     brief: >
       Attributes describing EverQuest telemetry emitted by the Zeal client.
     attributes:
-      - id: eq.character.name
+      - id: everquest.character.name
         type: string
         stability: development
         brief: The name of the player character the telemetry was emitted for.
@@ -16,51 +16,51 @@ groups:
           > Character names are user-chosen handles and MAY be considered
           > personal data depending on the server and jurisdiction.
 
-      - id: eq.character.class
+      - id: everquest.character.class
         type: string
         stability: development
         brief: The character's class (archetype).
         examples: ["Bard", "Cleric", "Warrior"]
 
-      - id: eq.character.level
+      - id: everquest.character.level
         type: int
         stability: development
         brief: The character's level.
         examples: [60, 1]
 
-      - id: eq.character.deity
+      - id: everquest.character.deity
         type: int
         stability: development
         brief: The numeric identifier of the character's deity.
         examples: [201, 396]
 
-      - id: eq.character.aa.unspent
+      - id: everquest.character.aa.unspent
         type: int
         stability: development
         brief: The number of unspent Alternate Advancement (AA) points.
         examples: [0, 12]
 
-      - id: eq.character.stat
+      - id: everquest.character.stat
         type: template[int]
         stability: development
         brief: >
           A character base stat. The final key segment is the stat name, e.g.
-          `eq.character.stat.strength`.
+          `everquest.character.stat.strength`.
         examples: [90, 115]
 
-      - id: eq.zone.id
+      - id: everquest.zone.id
         type: int
         stability: development
         brief: The numeric identifier of the zone the character is currently in.
         examples: [169, 1]
 
-      - id: eq.zone.name
+      - id: everquest.zone.name
         type: string
         stability: development
         brief: The human-readable short name of the zone the character is in.
         examples: ["Mons Letalis", "North Qeynos"]
 
-      - id: eq.chat.color
+      - id: everquest.chat.color
         type: int
         stability: development
         brief: >
@@ -68,7 +68,7 @@ groups:
           channel/category (e.g. spell, melee, system).
         examples: [273, 0]
 
-      - id: eq.combat.source
+      - id: everquest.combat.source
         type: string
         stability: development
         brief: >
@@ -76,7 +76,7 @@ groups:
           pet→owner link), so a pet's damage is credited to the owning player. Enables per-source DPS.
         examples: ["Abuelo", "Controels", "a temple guard"]
 
-      - id: eq.combat.source_type
+      - id: everquest.combat.source_type
         type:
           members:
             - id: player
@@ -96,7 +96,7 @@ groups:
           Classification of the damage source from the client's live entity list — lets a shared
           meter filter to players without heuristics.
 
-      - id: eq.combat.target
+      - id: everquest.combat.target
         type: string
         stability: development
         brief: >
@@ -105,7 +105,7 @@ groups:
           distinguishable; DoT ticks parsed from chat carry the display name without the suffix.
         examples: ["a_temple_guard00", "A Shissar Revenant"]
 
-      - id: eq.combat.direction
+      - id: everquest.combat.direction
         type:
           members:
             - id: outgoing
@@ -119,7 +119,7 @@ groups:
         stability: development
         brief: Direction of combat damage relative to the local player.
 
-      - id: eq.combat.damage.type
+      - id: everquest.combat.damage.type
         type: string
         stability: development
         brief: >
@@ -127,13 +127,41 @@ groups:
           (e.g. the melee attack type, or "spell" for spell damage).
         examples: ["slash", "crush", "pierce", "bash", "spell"]
 
-      - id: eq.spell.name
+      - id: everquest.fight.outcome
+        type:
+          members:
+            - id: killed
+              value: "killed"
+              stability: development
+              brief: The mob died (a slain message matched).
+            - id: idle
+              value: "idle"
+              stability: development
+              brief: No damage for 30s — mob fled, reset, or the group moved on.
+            - id: zoned
+              value: "zoned"
+              stability: development
+              brief: The reporting player left the zone mid-fight.
+        stability: development
+        brief: How a fight (encounter span) ended.
+
+      - id: everquest.fight.damage.dealt
+        type: int
+        stability: development
+        brief: Total damage the reporter observed dealt to the target during the fight.
+
+      - id: everquest.fight.damage.taken
+        type: int
+        stability: development
+        brief: Total damage the reporter took from the target during the fight.
+
+      - id: everquest.spell.name
         type: string
         stability: development
         brief: The name of the spell or song involved in the telemetry.
         examples: ["Chant of Battle", "Complete Heal"]
 
-      - id: eq.discipline.name
+      - id: everquest.discipline.name
         type: string
         stability: development
         brief: The name of the combat discipline that is active.

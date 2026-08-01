@@ -1,0 +1,21 @@
+{{- template.set_file_name("everquest_semconv.h") -}}
+// GENERATED FILE — do not edit.
+// Produced by OpenTelemetry Weaver from the everquest-semconv registry:
+//   weaver registry generate -r model --templates templates cpp <out>
+// The registry is the source of truth for these names; a typo here becomes a compile error
+// instead of a silently split timeseries.
+#pragma once
+
+namespace everquest_semconv {
+
+// ---- attributes ----
+{% for attr in ctx.attributes | sort(attribute="name") %}
+inline constexpr const char *k{{ attr.name | pascal_case }} = "{{ attr.name }}";
+{% endfor %}
+
+// ---- metrics ----
+{% for metric in ctx.metrics | sort(attribute="metric_name") %}
+inline constexpr const char *k{{ metric.metric_name | pascal_case }}Metric = "{{ metric.metric_name }}";
+{% endfor %}
+
+}  // namespace everquest_semconv
