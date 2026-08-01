@@ -65,7 +65,7 @@ melee (item and innate shields carry no spell id at all).
 | Metric | Instrument | Unit | Key attributes |
 |---|---|---|---|
 | `everquest.combat.damage` | counter | `{hitpoint}` | `source`, `source_type`, `target`, `direction`, `damage.type`, `zone.name`, `group.leader` |
-| `everquest.combat.heal` | counter | `{hitpoint}` | `source`, `direction`, `zone.name` |
+| `everquest.combat.heal` | counter | `{hitpoint}` | `source`, `direction`, `zone.name`, `group.leader` |
 | `everquest.character.attack` | gauge | `1` | `zone.name` |
 | `everquest.character.haste` | gauge | `%` | `zone.name` |
 | `everquest.group.member` | updowncounter | `{member}` | `group.leader`, `character.name`, `zone.name` |
