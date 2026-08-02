@@ -9,11 +9,14 @@ groups:
       sums cleanly without double counting. `everquest.combat.direction` outgoing = healing done,
       incoming = healing received.
     note: >
-      Only the client involved in a heal is told about it: EverQuest has messages for
-      "you healed X" and "you have been healed", and no third-person form at all. So
-      healing DONE can only ever be reported by the healer's own client - a group-mate
-      running the meter cannot see it - and an empty healing-done series means no healer
-      is reporting, not that healing failed.
+      On Project Quarm, healing done is not observable at all. Mob::HealDamage messages
+      only the target ("message to target", YOU_HEALED) and sends the healer nothing -
+      so no client, not even the healer's own, learns how much it healed. The client's
+      string table does contain "You have healed %1 for %2", but this server never
+      sends it, and heal-over-time ticks are messaged to nobody (`!hot`).
+
+      Healing is therefore recorded from the receiving side, which is the only witness.
+      Consumers should read this metric as healing RECEIVED, not healing done.
 
       For direction=incoming the source attribute is the character who was *healed*,
       not the healer: the message does not name whoever cast it, so there is nothing
