@@ -8,6 +8,16 @@ groups:
       Only the involved client sees heal amounts, so each player self-reports — the shared meter
       sums cleanly without double counting. `everquest.combat.direction` outgoing = healing done,
       incoming = healing received.
+    note: >
+      Only the client involved in a heal is told about it: EverQuest has messages for
+      "you healed X" and "you have been healed", and no third-person form at all. So
+      healing DONE can only ever be reported by the healer's own client - a group-mate
+      running the meter cannot see it - and an empty healing-done series means no healer
+      is reporting, not that healing failed.
+
+      For direction=incoming the source attribute is the character who was *healed*,
+      not the healer: the message does not name whoever cast it, so there is nothing
+      truthful to put there.
     instrument: counter
     unit: "{hitpoint}"
     entity_associations:
