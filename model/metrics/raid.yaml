@@ -1,0 +1,25 @@
+groups:
+  - id: metric.everquest.raid.lockout.expiry
+    type: metric
+    metric_name: everquest.raid.lockout.expiry
+    stability: development
+    brief: >
+      The instant a raid lockout expires, as seconds since the Unix epoch.
+    note: >
+      An absolute deadline rather than a remaining duration, so consumers subtract the
+      current time to count down: a remaining-time value would be wrong the moment it
+      was exported, whereas a deadline stays correct for as long as the value survives
+      - including after the player logs out and the series goes stale, which is the
+      normal case for an 18-hour lockout.
+
+      The lockout notice itself is event-shaped and would be a log record in a system
+      that shipped logs. This one does not: the notice arrives as a chat line, and chat
+      never leaves the player's machine by design. The target name and the deadline are
+      derived facts rather than the message, which is what makes them exportable.
+    instrument: gauge
+    unit: "s"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.raid.target
+        requirement_level: required

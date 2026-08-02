@@ -177,6 +177,14 @@ groups:
         stability: development
         brief: Total damage the reporter took from the target during the fight.
 
+      - id: everquest.raid.target
+        type: string
+        stability: development
+        brief: >
+          The raid encounter a lockout applies to, as named by the server in the
+          lockout notice.
+        examples: ["Prince Selrach Di`zok"]
+
       - id: everquest.spell.name
         type: string
         stability: development
