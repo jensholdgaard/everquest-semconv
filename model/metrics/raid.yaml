@@ -23,3 +23,32 @@ groups:
     attributes:
       - ref: everquest.raid.target
         requirement_level: required
+
+  - id: metric.everquest.raid.kill.timestamp
+    type: metric
+    metric_name: everquest.raid.kill.timestamp
+    stability: development
+    brief: >
+      When a lockout target was last killed, as seconds since the Unix epoch -
+      the "time of death" guilds track to plan the next spawn window.
+    note: >
+      Captured from the lockout notice, which the server emits from
+      NPC::CreateCorpse - at the kill, not at looting - so it is the time of death
+      to within network latency.
+
+      Only lockout targets produce this: the notice is what identifies an encounter
+      as one worth tracking, which keeps the series count to the handful of mobs a
+      guild actually plans around rather than every rat in the zone.
+
+      Everyone in the raid who receives the lockout reports the same kill, so
+      consumers should aggregate across reporters (`max by (everquest.raid.target)`)
+      rather than treating each as a separate event. Independent agreement between
+      reporters is a feature: it is what makes the timestamp trustworthy without
+      anyone typing it into chat.
+    instrument: gauge
+    unit: "s"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.raid.target
+        requirement_level: required
