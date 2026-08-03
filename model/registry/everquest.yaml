@@ -131,14 +131,20 @@ groups:
         type: string
         stability: development
         brief: >
-          The kind of damage: the melee skill used ("slash", "crush", "pierce",
-          "bash", "kick", "backstab", "archery", "hth", "special", or "melee"
-          for anything unrecognised), "spell" for direct spell damage, "dot" for
-          a damage-over-time tick, or "damage_shield" for retaliatory damage
-          shield damage.
+          The kind of damage: a weapon/skill class ("slash", "crush", "pierce",
+          "bash", "kick", "hth", "backstab", "archery", "throwing", "special", or
+          "melee" for anything unrecognised), "spell" for direct spell damage,
+          "dot" for a damage-over-time tick, or "damage_shield".
         note: >
-          Damage shields are identified by the damage packet carrying a
-          DmgShieldType (244-249) in the field that otherwise holds a SkillType.
+          Derived from the damage packet's type field, which carries
+          SkillDamageTypes[skill] rather than the skill itself - a lookup that
+          collapses 1H and 2H variants onto one value (both blunts report 0, both
+          slashes 1) and maps hand-to-hand to 4, kicks to 30, piercing to 36.
+          Reading it as a SkillType coincidentally works for slash and bash and
+          mislabels the rest.
+
+          Damage shields are identified by the same field carrying a
+          DmgShieldType (244-249).
           Without that test they are indistinguishable from spell damage (a
           buff-granted shield carries a spell id) or from melee (item and innate
           shields carry no spell id at all).
