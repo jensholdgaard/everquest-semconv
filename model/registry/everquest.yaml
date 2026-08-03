@@ -100,10 +100,18 @@ groups:
         type: string
         stability: development
         brief: >
-          The spawn the damage was dealt to. From the hit event this is the raw spawn name with
-          its instance suffix (e.g. `a_temple_guard00`), so individual mobs of the same name are
-          distinguishable; DoT ticks parsed from chat carry the display name without the suffix.
-        examples: ["a_temple_guard00", "A Shissar Revenant"]
+          The kind of spawn the damage was dealt to, with the instance suffix removed and
+          underscores replaced by spaces (`A_Centi_Dator023` becomes `A Centi Dator`).
+        note: >
+          The instance suffix is a spawn ID, and OpenTelemetry is explicit that IDs do not belong
+          in metric attributes: each distinct value mints a timeseries, so a camp of respawning
+          mobs walks the metric toward the cardinality limit while answering nothing anyone asks.
+          It also splits one mob across pulls, when "how much damage went onto that target" is the
+          question being asked.
+
+          Fight spans keep the raw, instance-suffixed name instead: a trace describes one
+          encounter, so two mobs of the same name pulled together must stay distinct there.
+        examples: ["A Centi Dator", "A Shissar Revenant"]
 
       - id: everquest.combat.direction
         type:
