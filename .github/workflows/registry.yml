@@ -1,0 +1,65 @@
+# Validates the registry and the C++ template on every push.
+#
+# Until now neither was checked by anything: weaver was a tool you had to remember to install and
+# run by hand, so a malformed group or a template that no longer compiled would sit in main
+# unnoticed until someone regenerated. The consumer of this registry is a header of name constants -
+# a broken or silently-changed name there splits a Prometheus timeseries rather than failing loudly,
+# which is exactly the class of mistake the registry exists to prevent.
+name: registry
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install weaver
+        run: |
+          set -euo pipefail
+          ver=$(curl -fsSL https://api.github.com/repos/open-telemetry/weaver/releases/latest \
+                | grep -m1 '"tag_name"' | sed -E 's/.*"(v[^"]+)".*/\1/')
+          echo "weaver $ver"
+          curl -fsSL "https://github.com/open-telemetry/weaver/releases/download/${ver}/weaver-x86_64-unknown-linux-gnu.tar.xz" \
+            | tar xJ
+          echo "$PWD/weaver-x86_64-unknown-linux-gnu" >> "$GITHUB_PATH"
+
+      # --future enables checks that will become errors in a later weaver, so drift is caught while
+      # it is still cheap to fix rather than at the upgrade.
+      - name: Check the registry
+        run: weaver registry check -r model --future
+
+      - name: Generate the C++ header
+        run: |
+          set -euo pipefail
+          weaver registry generate -r model --templates templates cpp out
+          test -s out/everquest_semconv.h || { echo "template produced nothing"; exit 1; }
+          echo "--- generated ---"
+          head -20 out/everquest_semconv.h
+
+      # Every attribute and metric in the registry must reach the header. A template that quietly
+      # stops emitting a group would otherwise look like a successful build.
+      - name: Assert every registry name is in the header
+        run: |
+          set -euo pipefail
+          # Declarations only. A bare 'everquest.*' grep also picks up the entity name and the
+          # examples inside briefs - e.g. everquest.character.stat.strength, which illustrates a
+          # template[int] attribute and is not itself a declared name.
+          grep -rhoE '(- id|metric_name): everquest\.[a-z0-9._]+' model/registry model/metrics \
+            | sed -E 's/.*: //' | sort -u > /tmp/names.txt
+          wc -l < /tmp/names.txt | xargs echo "registry names:"
+          missing=0
+          while read -r n; do
+            grep -q "\"$n\"" out/everquest_semconv.h || { echo "missing from header: $n"; missing=1; }
+          done < /tmp/names.txt
+          [ "$missing" -eq 0 ] || exit 1
+          echo "all registry names present in the header"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: everquest_semconv.h
+          path: out/everquest_semconv.h
