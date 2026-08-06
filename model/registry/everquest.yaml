@@ -48,6 +48,19 @@ groups:
           `everquest.character.stat.strength`.
         examples: [90, 115]
 
+      - id: everquest.heal.caster.mana.percent
+        type: int
+        stability: development
+        brief: >
+          The caster's remaining mana as a percentage (0-100) at the moment a Complete Heal
+          was announced, as reported by their own macro.
+        note: >
+          Self-reported by the casting client through a chat macro, and therefore only as
+          accurate and as present as that macro. It is recorded because a chain that starts
+          breaking down usually shows here first - a cleric's mana falling cast over cast
+          predicts the gap before the gap happens.
+        examples: [92, 14]
+
       - id: everquest.zone.id
         type: int
         stability: development
