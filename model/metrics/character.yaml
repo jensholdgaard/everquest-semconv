@@ -23,3 +23,28 @@ groups:
     unit: "%"
     entity_associations:
       - everquest.character
+
+  - id: metric.everquest.character.stat
+    type: metric
+    metric_name: everquest.character.stat
+    stability: development
+    brief: >
+      A character's current base stat value, recorded when it changes.
+    note: >
+      A synchronous gauge, not an observable one, because these change on an event - swapping gear,
+      gaining a buff, levelling - rather than being polled. The spec points synchronous gauges at
+      exactly this case: values exposed by subscribing to change events, as opposed to values read
+      through an accessor, which is what the attack and haste gauges do.
+
+      Recording only on change also keeps this honest about what it is. A stat that has not moved
+      since login is not new information every ten seconds, and emitting it as though it were would
+      make "when did this change?" - the only interesting question about a stat - unanswerable.
+    instrument: gauge
+    unit: "1"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.character.stat.name
+        requirement_level: required
+      - ref: everquest.character.name
+        requirement_level: required

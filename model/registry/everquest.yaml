@@ -40,13 +40,36 @@ groups:
         brief: The number of unspent Alternate Advancement (AA) points.
         examples: [0, 12]
 
-      - id: everquest.character.stat
-        type: template[int]
+      - id: everquest.character.stat.name
+        type:
+          members:
+            - id: strength
+              value: "strength"
+              stability: development
+            - id: stamina
+              value: "stamina"
+              stability: development
+            - id: dexterity
+              value: "dexterity"
+              stability: development
+            - id: agility
+              value: "agility"
+              stability: development
+            - id: wisdom
+              value: "wisdom"
+              stability: development
+            - id: intelligence
+              value: "intelligence"
+              stability: development
+            - id: charisma
+              value: "charisma"
+              stability: development
         stability: development
-        brief: >
-          A character base stat. The final key segment is the stat name, e.g.
-          `everquest.character.stat.strength`.
-        examples: [90, 115]
+        brief: Which base stat a `everquest.character.stat` measurement refers to.
+        note: >
+          Previously modelled as a template attribute, which meant the seven names were written by
+          hand at the call site with nothing checking them - the exact failure the registry exists
+          to prevent. As a closed set they are generated, and a typo does not compile.
 
       - id: everquest.combat.pet.name
         type: string
