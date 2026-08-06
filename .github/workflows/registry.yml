@@ -18,15 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Pinned rather than "latest": an unauthenticated API call for the tag is rate-limited on
+      # shared runners, and a validator that changes under you turns an unrelated push red.
       - name: Install weaver
+        env:
+          WEAVER_VERSION: v0.25.1
         run: |
           set -euo pipefail
-          ver=$(curl -fsSL https://api.github.com/repos/open-telemetry/weaver/releases/latest \
-                | grep -m1 '"tag_name"' | sed -E 's/.*"(v[^"]+)".*/\1/')
-          echo "weaver $ver"
-          curl -fsSL "https://github.com/open-telemetry/weaver/releases/download/${ver}/weaver-x86_64-unknown-linux-gnu.tar.xz" \
-            | tar xJ
-          echo "$PWD/weaver-x86_64-unknown-linux-gnu" >> "$GITHUB_PATH"
+          url="https://github.com/open-telemetry/weaver/releases/download/${WEAVER_VERSION}/weaver-x86_64-unknown-linux-gnu.tar.xz"
+          curl -fsSL "$url" -o /tmp/weaver.tar.xz
+          tar -xJf /tmp/weaver.tar.xz -C /tmp
+          echo "/tmp/weaver-x86_64-unknown-linux-gnu" >> "$GITHUB_PATH"
+          /tmp/weaver-x86_64-unknown-linux-gnu/weaver --version
 
       # --future enables checks that will become errors in a later weaver, so drift is caught while
       # it is still cheap to fix rather than at the upgrade.
