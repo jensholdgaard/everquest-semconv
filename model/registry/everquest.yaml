@@ -48,6 +48,19 @@ groups:
           `everquest.character.stat.strength`.
         examples: [90, 115]
 
+      - id: everquest.heal.chain.position
+        type: int
+        stability: development
+        brief: >
+          The caster's assigned slot in a Complete Heal rotation, as announced by their macro
+          (the "1" in "1 - CH - Tank (100)").
+        note: >
+          Set by hand in each cleric's macro and reassigned per raid, so it describes the
+          rotation as the raid intended it - which is exactly what makes it worth recording.
+          Comparing the announced slot order against the order casts actually landed in is how
+          you tell "the chain was too slow" from "someone cast out of turn".
+        examples: [1, 5, 9]
+
       - id: everquest.heal.caster.mana.percent
         type: int
         stability: development
