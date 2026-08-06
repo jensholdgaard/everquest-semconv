@@ -1,30 +1,58 @@
 groups:
-  - id: span.everquest.zone.session
+  - id: span.everquest.heal.chain
     type: span
     span_kind: internal
     stability: development
     brief: >
-      One span per zone visit by the reporting player: from entering the zone to leaving it.
-      Serves as the trace root; fights in the zone are child spans.
-    attributes:
-      - ref: everquest.zone.name
-        requirement_level: required
-
-  - id: span.everquest.fight
-    type: span
-    span_kind: internal
-    stability: development
-    brief: >
-      An encounter with a specific spawn: opens at the first damage involving it and closes on a
-      slain message, 30s of inactivity, or zoning. Child of the zone-session span.
+      A Complete Heal rotation on one tank: opens at the first announced CH and closes once no
+      cleric has announced for 25 seconds. Serves as the trace root; each announced cast is a
+      child span.
+    note: >
+      The chain exists to keep a tank permanently covered by overlapping 10-second heals, so the
+      questions worth asking are about *time*: did the casts overlap, was there a window with no
+      heal in flight, and who was slow to their turn. Those are questions about how intervals line
+      up, which is what a span timeline answers and what a counter cannot.
     attributes:
       - ref: everquest.combat.target
         requirement_level: required
       - ref: everquest.zone.name
         requirement_level: recommended
-      - ref: everquest.fight.outcome
-        requirement_level: required
-      - ref: everquest.fight.damage.dealt
+      - ref: everquest.character.name
         requirement_level: recommended
-      - ref: everquest.fight.damage.taken
+
+  - id: span.everquest.heal.complete
+    type: span
+    span_kind: internal
+    stability: development
+    brief: >
+      A single Complete Heal, spanning the 10 seconds of its cast, as announced by the caster's
+      macro. Child of the chain span.
+    note: |
+      > [!IMPORTANT]
+      >
+      > This span records a heal that was **announced**, not one that is known to have landed.
+
+      The span is emitted when a cleric's macro announces the cast, and its extent is the spell's
+      fixed 10-second cast time. Nothing confirms completion: clerics deliberately duck to cancel
+      a Complete Heal when they need to do something else, and the caster's own client is never
+      told whether the cast finished. On Project Quarm the heal message goes only to the target.
+
+      A consumer must therefore read this as intent rather than coverage. A timeline with no gaps
+      means every cleric announced on time - it does not prove the tank was healed. Treating it as
+      delivered would overstate coverage in exactly the moments a chain was breaking down, which is
+      when it is most likely to be looked at.
+    attributes:
+      - ref: everquest.combat.source
+        requirement_level: required
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.heal.chain.position
+        requirement_level: recommended
+      - ref: everquest.heal.chain.handoff.ms
+        requirement_level: opt_in
+      - ref: everquest.heal.caster.mana.percent
+        requirement_level: opt_in
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.character.name
         requirement_level: recommended
