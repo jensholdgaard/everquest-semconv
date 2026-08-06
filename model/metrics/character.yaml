@@ -31,14 +31,15 @@ groups:
     brief: >
       A character's current base stat value, recorded when it changes.
     note: >
-      A synchronous gauge, not an observable one, because these change on an event - swapping gear,
-      gaining a buff, levelling - rather than being polled. The spec points synchronous gauges at
-      exactly this case: values exposed by subscribing to change events, as opposed to values read
-      through an accessor, which is what the attack and haste gauges do.
+      These change on an event - swapping gear, a buff landing, levelling - which is the case the
+      spec points a *synchronous* gauge at. It is implemented as an observable one anyway: the
+      synchronous Gauge instrument is gated behind OPENTELEMETRY_ABI_VERSION_NO >= 2 in the C++ API,
+      a preview ABI, and moving every instrument in a client that other people run onto unstable
+      interfaces is not a trade worth making for the distinction.
 
-      Recording only on change also keeps this honest about what it is. A stat that has not moved
-      since login is not new information every ten seconds, and emitting it as though it were would
-      make "when did this change?" - the only interesting question about a stat - unanswerable.
+      The observable outcome is the same. A gauge sampled on the export interval still shows a clean
+      step when gear changes, so "when did this change?" - the only interesting question about a
+      stat - remains answerable from the series.
     instrument: gauge
     unit: "1"
     entity_associations:
