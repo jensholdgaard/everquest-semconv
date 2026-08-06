@@ -48,6 +48,20 @@ groups:
           `everquest.character.stat.strength`.
         examples: [90, 115]
 
+      - id: everquest.heal.chain.handoff.ms
+        type: int
+        stability: development
+        brief: >
+          Milliseconds between the previous cleric's "GO - <name>" cue and this caster's own
+          Complete Heal announcement.
+        note: >
+          The chain's health shows here before it shows in coverage. A gap in the timeline
+          says the chain slipped; this says who was slow to answer their cue, which is the
+          difference between a rotation that needs reordering and one person who needs a
+          louder trigger. Absent when no cue preceded the cast - the leading cleric starts
+          the line unprompted.
+        examples: [420, 3100]
+
       - id: everquest.heal.chain.position
         type: int
         stability: development
