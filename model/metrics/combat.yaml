@@ -29,3 +29,61 @@ groups:
         requirement_level: recommended
       - ref: everquest.group.leader
         requirement_level: opt_in
+
+  - id: metric.everquest.fight.duration
+    type: metric
+    metric_name: everquest.fight.duration
+    stability: development
+    brief: >
+      Accumulated fight time against a target: the seconds from first to last damage in each
+      encounter, summed across encounters.
+    note: |
+      Exists so that damage can be divided by a time that means something. The community's parser
+      reports two rates and the guild talks in both:
+
+        DPS  = damage / the seconds that player was active in the fight
+        SDPS = damage / the whole fight's duration   ("sustained")
+
+      Dividing `everquest.combat.damage` by this metric over the same range gives SDPS, which is
+      the number in an eqlogparse header (`... in 408s, 1,49M Damage @3,65K`).
+
+      A rolling `rate()` over a fixed window is neither of those. It reads high during a burn and
+      low across a pull, and it was the source of a "the website says I did 130 dps, it is too
+      high" complaint - correct arithmetic answering a question nobody asked.
+    instrument: counter
+    unit: "s"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.character.name
+        requirement_level: required
+
+  - id: metric.everquest.fight.active
+    type: metric
+    metric_name: everquest.fight.active
+    stability: development
+    brief: >
+      Accumulated seconds in which a given source actually dealt damage during fights, summed
+      across encounters.
+    note: >
+      Damage divided by this is DPS as the community parser defines it - the rate while that
+      attacker was engaged, rather than across the whole encounter. A caster who nukes twice in a
+      long fight has a high DPS and a low SDPS, and the difference between the two columns is
+      exactly the thing raiders argue about.
+    instrument: counter
+    unit: "s"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.combat.source
+        requirement_level: required
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.character.name
+        requirement_level: required
