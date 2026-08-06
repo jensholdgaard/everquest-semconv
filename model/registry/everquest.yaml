@@ -48,6 +48,31 @@ groups:
           `everquest.character.stat.strength`.
         examples: [90, 115]
 
+      - id: everquest.combat.pet.name
+        type: string
+        stability: development
+        brief: >
+          The pet that actually dealt the damage, when the attacker was a pet. Absent when the
+          owner swung themselves.
+        note: |
+          `everquest.combat.source` stays the **owner** even for pet damage, so totals match how
+          raiders already count - the community parser merges pets into their owner and labels the
+          row "Cothaholic +Pets". This attribute keeps the pet visible underneath that, so a
+          magician can see how much of their output was the pet without the pet becoming a separate
+          contestant on the meter.
+
+          > [!CAUTION]
+          >
+          > Swarm pets are the cardinality hazard here. They arrive several at a time, live for
+          > under a minute, and each carries its own generated name, so one fight can mint dozens of
+          > values that will never be seen again. With cumulative temporality the SDK keeps every
+          > one of them for the life of the process and counts them against its 2000-set limit -
+          > and overflow drops `target` and `source` along with them.
+          >
+          > If swarm pets are ever recorded, their names should be collapsed to a single value
+          > before this attribute is set. The owner is the thing anyone actually asks about.
+        examples: ["Chryscat", "Gaseker"]
+
       - id: everquest.heal.chain.handoff.ms
         type: int
         stability: development
