@@ -5,8 +5,24 @@ groups:
     stability: development
     brief: >
       An EverQuest player character — the entity that telemetry is produced for.
-      Its identifying and descriptive attributes are carried as OTLP resource
-      attributes on every signal.
+    note: |
+      The character is NOT the OTLP service instance, and its identity is not
+      carried in the Resource.
+
+      A Resource is immutable and is bound to a provider when that provider is
+      created, and identifying attributes MUST NOT change during the lifetime of
+      the entity. A player can camp to character select and return as somebody
+      else without the process restarting, so a character held in the Resource
+      would either go stale or force the whole telemetry pipeline to be torn down
+      and rebuilt mid-session.
+
+      `service.instance.id` therefore identifies the *game client process* and is a
+      random UUID, as recommended by the service semantic conventions — which also
+      warn that the data behind an instance id should be treated as confidential,
+      and a character name is a user-chosen handle.
+
+      The character travels as `everquest.character.name` on each measurement
+      instead, where it is free to change.
     attributes:
       - ref: everquest.character.name
         role: identifying

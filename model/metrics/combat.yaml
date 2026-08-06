@@ -13,6 +13,8 @@ groups:
     entity_associations:
       - everquest.character
     attributes:
+      - ref: everquest.character.name
+        requirement_level: required
       - ref: everquest.combat.source
         requirement_level: recommended
       - ref: everquest.combat.source_type
