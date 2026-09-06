@@ -1,0 +1,27 @@
+groups:
+  - id: event.everquest.combat.death
+    type: event
+    name: everquest.combat.death
+    stability: development
+    brief: >
+      An entity died in the zone: the server's death packet, carrying the spawn id of what
+      died and of what killed it. Emitted by every client in the zone that runs the meter.
+    note: >
+      This is the kill signal. A lockout notice reaches only the raiders who earned one, a
+      chat line names the kind and not the individual; the death packet is sent to the whole
+      zone for every death and names the spawn. Consumers dedupe on zone, spawn id and time,
+      since several reporters see the same death. Player deaths are included: a wipe is a
+      burst of them.
+    attributes:
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.spawn.id
+        requirement_level: required
+      - ref: everquest.spawn.name
+        requirement_level: recommended
+      - ref: everquest.combat.source
+        requirement_level: recommended
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.character.name
+        requirement_level: recommended

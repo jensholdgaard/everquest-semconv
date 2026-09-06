@@ -298,3 +298,28 @@ groups:
         stability: development
         brief: The name of the combat discipline that is active.
         examples: ["Defensive", "Evasive"]
+
+      - id: everquest.spawn.id
+        type: int
+        stability: development
+        brief: >
+          The spawn id the server assigned this entity in its current zone - what a packet
+          means by "the target": stable for one spawn's life, reused after it is gone.
+        note: >
+          Spans and events only, never a metric attribute: it is an ID, and every respawn
+          would mint a timeseries. It is what tells two `a temple guard` apart, and what lets
+          a death packet be matched to the fight it ends without comparing names.
+        examples: [1234, 40211]
+
+      - id: everquest.spawn.name
+        type: string
+        stability: development
+        brief: >
+          The entity's name exactly as the client holds it, instance suffix and `#` prefix
+          included (`#Vulak`Aerr`, `a_temple_guard00`). `everquest.combat.target` is the
+          normalised kind; this is the individual.
+        note: >
+          Spans and events only, for the same reason as `everquest.spawn.id`. Carries the
+          `#` that marks a spawn the server treats as special, which is exactly the prefix
+          the normalised name drops.
+        examples: ["#Vulak`Aerr", "a_temple_guard00"]

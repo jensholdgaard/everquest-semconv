@@ -56,3 +56,33 @@ groups:
         requirement_level: recommended
       - ref: everquest.character.name
         requirement_level: recommended
+
+  - id: span.everquest.fight
+    type: span
+    span_kind: internal
+    stability: development
+    brief: >
+      One encounter with one NPC, from the first damage either way to the death packet, the
+      idle timeout or a zone change. Named `fight <target>`.
+    note: >
+      The trace is about an individual spawn, so it carries the spawn id and raw name that
+      the damage metrics deliberately drop: two mobs of the same name pulled together are two
+      spans, and a respawn is a new one. The outcome says how it ended; `killed` comes from
+      the server's death packet for that spawn id, not from a chat line.
+    attributes:
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.spawn.id
+        requirement_level: recommended
+      - ref: everquest.spawn.name
+        requirement_level: recommended
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.character.name
+        requirement_level: recommended
+      - ref: everquest.fight.outcome
+        requirement_level: required
+      - ref: everquest.fight.damage.dealt
+        requirement_level: recommended
+      - ref: everquest.fight.damage.taken
+        requirement_level: recommended
