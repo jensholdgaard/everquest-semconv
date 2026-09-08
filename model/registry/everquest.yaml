@@ -28,6 +28,35 @@ groups:
         brief: The character's level.
         examples: [60, 1]
 
+      - id: everquest.profile.reason
+        type: string
+        stability: development
+        brief: Why a character profile was emitted.
+        examples: ["command", "zone", "upload"]
+        note: >
+          `command` is the member's `/magelo`; `zone` is the client's own emission on a zone
+          change; `upload` is a `/outputfile` export a member handed the guild bot.
+
+      - id: everquest.profile.source
+        type:
+          members:
+            - id: quarmy_file
+              value: "quarmy_file"
+              stability: development
+              brief: An `/outputfile quarmy` export uploaded by the member.
+            - id: inventory_file
+              value: "inventory_file"
+              stability: development
+              brief: An `/outputfile inventory` export uploaded by the member (gear only).
+        stability: development
+        brief: >
+          Where a character profile came from when it was not the client's own event. Absent
+          on a client's profile; a reader treating absence as "the running client" is right.
+        note: >
+          A profile from a file carries no derived stats (AC, HP, attack, haste, resists): the
+          client computes those at runtime and an export does not have them. Readers show them
+          as absent, never as zero.
+
       - id: everquest.character.deity
         type: int
         stability: development

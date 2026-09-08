@@ -1,4 +1,31 @@
 groups:
+  - id: event.everquest.character.profile
+    type: event
+    name: everquest.character.profile
+    stability: development
+    brief: >
+      A character as its client last saw it: identity, base stats, AA, the 21 equipment slots
+      by item id and, from newer clients, the character sheet as drawn. Emitted on `/magelo`,
+      on a zone change at most every ten minutes, and by the guild bot for a `/roster upload`.
+    note: >
+      The body is JSON: `name`, `level`, `class`, `race`, `gender`, `deity`, `guild`,
+      `base_stats` (str, sta, cha, dex, int, agi, wis), `sheet` (client only), `aa`
+      (`spent`, `unspent`), `aa_abilities` (`[index, rank]` pairs), `equipment`
+      (`{slot, id, name, count}`, slots named `Ear1` .. `Ammo` in the client's order), and
+      `reason`; an upload adds `source`. Bags, bank and coin are never part of it.
+    attributes:
+      - ref: everquest.character.name
+        requirement_level: required
+      - ref: everquest.character.class
+        requirement_level: recommended
+      - ref: everquest.character.level
+        requirement_level: recommended
+      - ref: everquest.profile.reason
+        requirement_level: recommended
+      - ref: everquest.profile.source
+        requirement_level:
+          conditionally_required: when the profile did not come from the running client
+
   - id: event.everquest.combat.death
     type: event
     name: everquest.combat.death
