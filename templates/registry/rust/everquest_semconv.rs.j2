@@ -1,0 +1,43 @@
+{{- template.set_file_name("everquest_semconv.rs") -}}
+//! GENERATED FILE — do not edit.
+//! Produced by OpenTelemetry Weaver from the everquest-semconv registry:
+//!   weaver registry generate -r model --templates templates rust <out>
+//! The registry is the source of truth for these names; a typo here is a
+//! compile error instead of a silently split timeseries.
+
+// ---- attributes ----
+{% for attr in ctx.attributes | sort(attribute="name") %}
+/// {{ attr.brief | trim | replace("\n", " ") }}
+pub const {{ attr.name | screaming_snake_case }}: &str = "{{ attr.name }}";
+{% endfor %}
+
+/// OTLP value type of every attribute this registry defines, so an exporter
+/// can emit ints as ints without each call site saying so.
+pub fn attribute_type(key: &str) -> Option<AttributeType> {
+    match key {
+{% for attr in ctx.attributes | sort(attribute="name") %}
+        "{{ attr.name }}" => Some(AttributeType::{% if attr.type is string %}{% if attr.type == "int" %}Int{% elif attr.type == "double" %}Double{% elif attr.type == "boolean" %}Bool{% else %}Str{% endif %}{% else %}Str{% endif %}),
+{% endfor %}
+        _ => None,
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AttributeType {
+    Str,
+    Int,
+    Double,
+    Bool,
+}
+
+// ---- metrics ----
+{% for metric in ctx.metrics | sort(attribute="metric_name") %}
+/// {{ metric.brief | trim | replace("\n", " ") }}
+pub const {{ metric.metric_name | screaming_snake_case }}_METRIC: &str = "{{ metric.metric_name }}";
+{% endfor %}
+
+// ---- events ----
+{% for event in ctx.events | sort(attribute="name") %}
+/// {{ event.brief | trim | replace("\n", " ") }}
+pub const {{ event.name | screaming_snake_case }}_EVENT: &str = "{{ event.name }}";
+{% endfor %}

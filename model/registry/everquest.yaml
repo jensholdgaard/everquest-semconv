@@ -352,3 +352,118 @@ groups:
           `#` that marks a spawn the server treats as special, which is exactly the prefix
           the normalised name drops.
         examples: ["#Vulak`Aerr", "a_temple_guard00"]
+
+      # ---- server side: zone traffic, chat, merchants, quest scripts, wire ----
+      - id: everquest.spawn.count
+        type: int
+        stability: development
+        brief: Number of spawns in one batch sent to a client (`OP_ZoneSpawns`).
+        examples: [6, 100]
+      - id: everquest.chat.channel
+        type: int
+        stability: development
+        brief: EQ chat channel number (`ChatChannel_*`); 8 is say.
+        examples: [8, 3]
+      - id: everquest.chat.sender
+        type: string
+        stability: development
+        brief: Display name of whoever said the line, as decided by the server.
+        examples: ["Aelar", "Guard Alayle"]
+      - id: everquest.merchant.item_count
+        type: int
+        stability: development
+        brief: Rows in a merchant window as sent to the client.
+        examples: [13, 20]
+      - id: everquest.consider.con
+        type: string
+        stability: development
+        brief: Level-con colour returned for a considered spawn.
+        examples: ["White", "Red", "Green"]
+      - id: everquest.consider.faction
+        type: int
+        stability: development
+        brief: FACTION_VALUE returned for a considered spawn (1 ally … 9 scowls), before any client remap.
+        examples: [5, 9]
+      - id: everquest.script.receiver
+        type: string
+        stability: development
+        brief: Lua class a quest script called a method on.
+        examples: ["NPC", "Client", "eq"]
+      - id: everquest.script.method
+        type: string
+        stability: development
+        brief: Quest-script method or global that was called.
+        examples: ["Say", "SetFactionLevel2", "ChooseRandom"]
+      - id: everquest.script.file
+        type: string
+        stability: development
+        brief: Quest script the event ran in, relative to the quests root.
+        examples: ["freportw/Guard_Alayle.lua"]
+      - id: everquest.packet.size
+        type: int
+        stability: development
+        brief: Size in bytes of an application payload as sent on the wire.
+        examples: [183, 2304]
+      - id: everquest.stream.kind
+        type:
+          members:
+            - id: login
+              value: "login"
+              brief: The login server stream.
+              stability: development
+            - id: world
+              value: "world"
+              brief: The world server stream.
+              stability: development
+            - id: zone
+              value: "zone"
+              brief: The zone server stream.
+              stability: development
+        stability: development
+        brief: Which server the client socket is connected to.
+      - id: everquest.network.arq.abandoned
+        type: int
+        stability: development
+        brief: Reliable datagrams the server gave up resending in one tick.
+        examples: [1]
+      - id: everquest.network.arq.unacked_depth
+        type: int
+        stability: development
+        brief: Reliable datagrams still awaiting the client's ARSP.
+        examples: [0, 12]
+      - id: everquest.login.result
+        type:
+          members:
+            - id: ok
+              value: "ok"
+              brief: Credentials accepted.
+              stability: development
+            - id: error
+              value: "error"
+              brief: Credentials rejected.
+              stability: development
+        stability: development
+        brief: Outcome of a login attempt.
+      - id: everquest.server.store
+        type:
+          members:
+            - id: memory
+              value: "memory"
+              brief: Accounts and characters live in process memory.
+              stability: development
+            - id: postgres
+              value: "postgres"
+              brief: Accounts and characters live in Postgres.
+              stability: development
+        stability: development
+        brief: Which store backs the server's account and character data.
+      - id: everquest.content.expansion
+        type: double
+        stability: development
+        brief: The era the content gate is set to; -1 is everything, 0 Classic, 1 Kunark, 2 Velious, 3 Luclin, 4 Planes of Power.
+        examples: [-1, 1.0, 1.9]
+      - id: everquest.content.gated
+        type: int
+        stability: development
+        brief: Spawn points the content gate left empty when the zone booted.
+        examples: [0, 12]

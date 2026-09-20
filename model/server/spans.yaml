@@ -1,0 +1,25 @@
+# The server's spans are the standard database-client and RPC-server spans;
+# these views pin the attributes eqmacemu always adds so live-check can hold
+# it to them (see telemetry/.weaver.toml matchers).
+groups:
+  - id: span.everquest.db.client
+    type: span
+    extends: span.db.client
+    span_kind: client
+    stability: development
+    brief: A Quarm content query from the zone process to Postgres.
+    attributes:
+      - ref: db.query.summary
+        requirement_level: required
+      - ref: db.response.returned_rows
+        requirement_level: required
+
+  - id: span.everquest.rpc.server
+    type: span
+    extends: span.rpc.call.server
+    span_kind: server
+    stability: development
+    brief: One client packet handled by the login, world or zone service.
+    note: >
+      `rpc.system.name` is `eqmac`; `rpc.method` is `{service}/{Opcode}`,
+      where the service is the server process (login, world, zone).

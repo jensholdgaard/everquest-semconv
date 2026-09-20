@@ -1,0 +1,451 @@
+# Events the Rust server (eqmacemu) emits while serving a zone. Bodies are
+# human-readable; anything worth grouping or filtering on is an attribute.
+groups:
+  # Protocol steps noted by the wire layer: which stream, which peer.
+  - id: everquest.server.wire_note
+    type: attribute_group
+    stability: development
+    brief: Attributes every wire-layer note carries.
+    attributes:
+      - ref: everquest.stream.kind
+        requirement_level: required
+      - ref: network.peer.address
+        requirement_level: recommended
+
+  # A sized packet the server built for the client.
+  - id: everquest.server.sized_packet
+    type: attribute_group
+    stability: development
+    brief: Attributes of a note about one outbound packet.
+    attributes:
+      - ref: everquest.packet.size
+        requirement_level: required
+      - ref: network.peer.address
+        requirement_level: recommended
+
+  - id: event.everquest.server.start
+    type: event
+    name: everquest.server.start
+    stability: development
+    brief: The server process booted; the body names the binary.
+
+  - id: event.everquest.server.listen
+    type: event
+    name: everquest.server.listen
+    stability: development
+    brief: The server bound its UDP sockets; the body lists them.
+
+  - id: event.everquest.server.world_data
+    type: event
+    name: everquest.server.world_data
+    stability: development
+    brief: Which world-content source the zone process uses, or why it could not.
+
+  - id: event.everquest.server.feature_flags
+    type: event
+    name: everquest.server.feature_flags
+    stability: development
+    brief: Which OpenFeature provider the server evaluates its flags with, and from where.
+    attributes:
+      - ref: feature_flag.provider.name
+        requirement_level: required
+
+  - id: event.everquest.network.datagram
+    type: event
+    name: everquest.network.datagram
+    stability: development
+    brief: One datagram's first bytes, hex in the body; emitted only while `wire.dump` is on.
+    extends: everquest.server.wire_note
+    attributes:
+      - ref: network.io.direction
+        requirement_level: required
+      - ref: everquest.packet.size
+        requirement_level: required
+
+  - id: event.everquest.zone.content
+    type: event
+    name: everquest.zone.content
+    stability: development
+    brief: What the content gate did — a zone booted under an era, or the era moved.
+    attributes:
+      - ref: everquest.content.expansion
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+      - ref: everquest.spawn.count
+        requirement_level: recommended
+      - ref: everquest.content.gated
+        requirement_level: recommended
+
+  - id: event.everquest.server.log
+    type: event
+    name: everquest.server.log
+    stability: development
+    brief: A legacy free-text line from the C++-era launcher path.
+
+  - id: event.everquest.rpc.dispatch
+    type: event
+    name: everquest.rpc.dispatch
+    stability: development
+    brief: A launcher-side RPC was dispatched; the body is the outcome.
+    attributes:
+      - ref: rpc.method
+        requirement_level: required
+
+  - id: event.everquest.network.peer
+    type: event
+    name: everquest.network.peer
+    stability: development
+    brief: A new client address was seen on a socket.
+    attributes:
+      - ref: network.peer.address
+        requirement_level: required
+      - ref: network.peer.port
+        requirement_level: required
+
+  - id: event.everquest.network.session.request
+    type: event
+    name: everquest.network.session.request
+    stability: development
+    brief: The client asked for a session on an EQStream socket.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.network.other
+    type: event
+    name: everquest.network.other
+    stability: development
+    brief: A datagram the server does not handle.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.network.old.reassemble
+    type: event
+    name: everquest.network.old.reassemble
+    stability: development
+    brief: A fragmented reliable packet was reassembled.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.network.parse
+    type: event
+    name: everquest.network.parse
+    stability: development
+    brief: A datagram could not be parsed; the body has the bytes.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.accept
+    type: event
+    name: everquest.login.accept
+    stability: development
+    brief: LoginAccepted was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.banner
+    type: event
+    name: everquest.login.banner
+    stability: development
+    brief: The login banner was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.complete
+    type: event
+    name: everquest.login.complete
+    stability: development
+    brief: LoginComplete was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.disconnect
+    type: event
+    name: everquest.login.disconnect
+    stability: development
+    brief: The client left the login server.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.play
+    type: event
+    name: everquest.login.play
+    stability: development
+    brief: The client picked a world to play on.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.server_list
+    type: event
+    name: everquest.login.server_list
+    stability: development
+    brief: The server list was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.session_ready
+    type: event
+    name: everquest.login.session_ready
+    stability: development
+    brief: The login session is ready for credentials.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.reject
+    type: event
+    name: everquest.login.reject
+    stability: development
+    brief: Credentials were rejected.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.parse
+    type: event
+    name: everquest.login.parse
+    stability: development
+    brief: A login packet could not be decoded.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.retransmit
+    type: event
+    name: everquest.login.retransmit
+    stability: development
+    brief: A LoginPC retry made the server resend LoginAccepted.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.login.opcode
+    type: event
+    name: everquest.login.opcode
+    stability: development
+    brief: An unhandled login opcode.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.enter
+    type: event
+    name: everquest.world.enter
+    stability: development
+    brief: The client entered world with a character.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.guilds
+    type: event
+    name: everquest.world.guilds
+    stability: development
+    brief: The guild list was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.handshake
+    type: event
+    name: everquest.world.handshake
+    stability: development
+    brief: The world handshake completed.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.session_ready
+    type: event
+    name: everquest.world.session_ready
+    stability: development
+    brief: The world session is ready.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.login_info
+    type: event
+    name: everquest.world.login_info
+    stability: development
+    brief: World login info was received or refused.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.opcode
+    type: event
+    name: everquest.world.opcode
+    stability: development
+    brief: An unhandled world opcode.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.world.autocreate
+    type: event
+    name: everquest.world.autocreate
+    stability: development
+    brief: A character was created on first login (transitional).
+
+  - id: event.everquest.zone.datarate
+    type: event
+    name: everquest.zone.datarate
+    stability: development
+    brief: The client reported its data rate.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.newzone
+    type: event
+    name: everquest.zone.newzone
+    stability: development
+    brief: NewZone was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.spawn
+    type: event
+    name: everquest.zone.spawn
+    stability: development
+    brief: The player's own spawn was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.exp
+    type: event
+    name: everquest.zone.exp
+    stability: development
+    brief: The experience packet was sent.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.ready
+    type: event
+    name: everquest.zone.ready
+    stability: development
+    brief: The client reported ClientReady.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.opcode
+    type: event
+    name: everquest.zone.opcode
+    stability: development
+    brief: An unhandled zone opcode.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.decode
+    type: event
+    name: everquest.zone.decode
+    stability: development
+    brief: A zone packet could not be decoded.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.rejected
+    type: event
+    name: everquest.zone.rejected
+    stability: development
+    brief: A zone request was refused; the body says why.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.shop_end
+    type: event
+    name: everquest.zone.shop_end
+    stability: development
+    brief: The merchant window closed.
+    extends: everquest.server.wire_note
+
+  - id: event.everquest.zone.pp
+    type: event
+    name: everquest.zone.pp
+    stability: development
+    brief: The player profile was sent.
+    extends: everquest.server.sized_packet
+
+  - id: event.everquest.zone.sze
+    type: event
+    name: everquest.zone.sze
+    stability: development
+    brief: ZoneEntry reply was sent.
+    extends: everquest.server.sized_packet
+
+  - id: event.everquest.zone.spawns_packet
+    type: event
+    name: everquest.zone.spawns_packet
+    stability: development
+    brief: One compressed ZoneSpawns packet was sent.
+    extends: everquest.server.sized_packet
+
+  - id: event.everquest.script.host
+    type: event
+    name: everquest.script.host
+    stability: development
+    brief: Which quest-script host booted, and how many scripts failed to load.
+
+  - id: event.everquest.zone.spawns
+    type: event
+    name: everquest.zone.spawns
+    stability: development
+    brief: A batch of spawns was sent to a client on zone entry.
+    attributes:
+      - ref: everquest.spawn.count
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+
+  - id: event.everquest.zone.entry
+    type: event
+    name: everquest.zone.entry
+    stability: development
+    brief: A character entered a zone.
+    attributes:
+      - ref: everquest.zone.name
+        requirement_level: required
+      - ref: everquest.spawn.id
+        requirement_level: required
+        brief: The entity id the character was given in the zone.
+
+  - id: event.everquest.zone.chat
+    type: event
+    name: everquest.zone.chat
+    stability: development
+    brief: A line of zone chat; the body is the text.
+    attributes:
+      - ref: everquest.chat.sender
+        requirement_level: required
+      - ref: everquest.chat.channel
+        requirement_level: required
+
+  - id: event.everquest.zone.target
+    type: event
+    name: everquest.zone.target
+    stability: development
+    brief: The player targeted a spawn.
+    attributes:
+      - ref: everquest.spawn.id
+        requirement_level: required
+
+  - id: event.everquest.zone.consider
+    type: event
+    name: everquest.zone.consider
+    stability: development
+    brief: The player considered a spawn.
+    attributes:
+      - ref: everquest.spawn.id
+        requirement_level: required
+      - ref: everquest.consider.con
+        requirement_level: required
+      - ref: everquest.consider.faction
+        requirement_level: required
+
+  - id: event.everquest.zone.shop
+    type: event
+    name: everquest.zone.shop
+    stability: development
+    brief: A merchant window was opened or refused.
+    attributes:
+      - ref: everquest.spawn.id
+        requirement_level: required
+      - ref: everquest.merchant.item_count
+        requirement_level: recommended
+
+  - id: event.everquest.script.missing_binding
+    type: event
+    name: everquest.script.missing_binding
+    stability: development
+    brief: A quest script called something the server does not implement yet.
+    attributes:
+      - ref: everquest.script.receiver
+        requirement_level: required
+      - ref: everquest.script.method
+        requirement_level: required
+      - ref: everquest.script.file
+        requirement_level: required
+
+  - id: event.everquest.script.error
+    type: event
+    name: everquest.script.error
+    stability: development
+    brief: A quest script failed to load or run; the body is the error.
+    attributes:
+      - ref: everquest.script.file
+        requirement_level: required
+
+  - id: event.everquest.network.retransmit_drop
+    type: event
+    name: everquest.network.retransmit_drop
+    stability: development
+    brief: Reliable datagrams were abandoned after the retry limit.
+    attributes:
+      - ref: everquest.stream.kind
+        requirement_level: required
+      - ref: network.peer.address
+        requirement_level: recommended
+      - ref: everquest.network.arq.abandoned
+        requirement_level: required
+      - ref: everquest.network.arq.unacked_depth
+        requirement_level: required

@@ -1,0 +1,58 @@
+# EQStream wire reliability. Both peers emit these — the server (eqmacemu)
+# and an instrumented client — each from its own point of view:
+# `network.io.direction=transmit` on the client is `receive` on the server.
+# Packet loss is a ratio derived in queries, not reported by either side:
+#   retransmitted / datagrams{transmit}  → loss towards the peer
+#   lost / datagrams{receive}            → loss from the peer
+# When the two sides disagree, the fault is in an ARQ implementation, not
+# the wire.
+groups:
+  - id: metric.everquest.network.datagrams
+    type: metric
+    metric_name: everquest.network.datagrams
+    stability: development
+    brief: UDP datagrams exchanged with the peer, by direction and stream.
+    instrument: counter
+    unit: "{datagram}"
+    attributes:
+      - ref: network.io.direction
+        requirement_level: required
+      - ref: everquest.stream.kind
+        requirement_level: required
+
+  - id: metric.everquest.network.datagrams.retransmitted
+    type: metric
+    metric_name: everquest.network.datagrams.retransmitted
+    stability: development
+    brief: >
+      Reliable datagrams sent again because the peer never acknowledged
+      them — this side's view of loss towards the peer.
+    instrument: counter
+    unit: "{datagram}"
+    attributes:
+      - ref: everquest.stream.kind
+        requirement_level: required
+
+  - id: metric.everquest.network.datagrams.lost
+    type: metric
+    metric_name: everquest.network.datagrams.lost
+    stability: development
+    brief: >
+      Reliable datagrams from the peer that never arrived, inferred from gaps
+      in its ARQ sequence — this side's view of loss from the peer.
+    instrument: counter
+    unit: "{datagram}"
+    attributes:
+      - ref: everquest.stream.kind
+        requirement_level: required
+
+  - id: metric.everquest.network.datagrams.abandoned
+    type: metric
+    metric_name: everquest.network.datagrams.abandoned
+    stability: development
+    brief: Reliable datagrams given up on after the retransmit limit.
+    instrument: counter
+    unit: "{datagram}"
+    attributes:
+      - ref: everquest.stream.kind
+        requirement_level: required

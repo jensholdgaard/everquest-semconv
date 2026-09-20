@@ -1,0 +1,10 @@
+# Weaver forge config: emit one Rust module of name constants from this registry.
+templates:
+  - pattern: everquest_semconv.rs.j2
+    filter: >
+      {
+        attributes: semconv_attributes,
+        metrics: semconv_metrics,
+        events: semconv_events
+      }
+    application_mode: single

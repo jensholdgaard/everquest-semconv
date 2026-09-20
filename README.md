@@ -23,6 +23,13 @@ model/
   metrics/character.yaml      # everquest.character.attack / .haste
   metrics/group.yaml          # everquest.group.member
   spans.yaml                  # zone session and fight spans
+  server/events.yaml          # eqmacemu server events
+  server/metrics.yaml         # eqmacemu server metrics
+  server/spans.yaml           # views of the OTel db/rpc spans the server emits
+  network/metrics.yaml        # EQStream datagram counters, emitted by both peers
+templates/registry/
+  cpp/                        # everquest_semconv.h for Zeal
+  rust/                       # everquest_semconv.rs for eqmacemu
 ```
 
 ## Attributes (`everquest.*`)
@@ -95,6 +102,25 @@ summing, or the group size is multiplied by the number of people reporting it.
 | `everquest.zone.session` | internal | A stay in one zone; parents the fights within it |
 | `everquest.fight` | internal | One encounter: opened on first damage, closed by a kill message, 30s of idle, or zoning |
 
+## Server signals (`model/server`, `model/network`)
+
+The Rust server ([eqmacemu](https://github.com/jensholdgaard/wood-blend-aurora-lark))
+emits from the same registry. Its own groups live beside the client's:
+
+| File | Holds |
+|---|---|
+| `model/server/events.yaml` | Every event the server logs: `everquest.login.*`, `everquest.world.*`, `everquest.zone.*` (entry, spawns, chat, consider, shop, content), `everquest.script.*`, `everquest.server.*`, `everquest.rpc.dispatch`; wire notes extend `everquest.server.wire_note` |
+| `model/server/metrics.yaml` | `everquest.login.attempts`, `everquest.character.created`, `everquest.script.missing_binding`, `everquest.server.up`, `everquest.zone.movement.updates` |
+| `model/network/metrics.yaml` | `everquest.network.datagrams` (+ `.retransmitted`, `.lost`, `.abandoned`): both peers emit these from their own side; packet loss is a ratio in the query |
+| `model/server/spans.yaml` | `span.everquest.db.client` and `span.everquest.rpc.server`: views of the OpenTelemetry `db` and `rpc` spans the server emits as-is |
+
+Standard signals the server reuses (`db.client.operation.duration`,
+`rpc.server.call.duration`, `feature_flag.evaluation`, the `service` and
+`telemetry.sdk` entities) come from the OpenTelemetry semantic conventions 1.40
+dependency declared in `model/manifest.yaml` and are imported there so
+`weaver registry live-check` validates them too. The server's
+`scripts/weaver_check.sh` runs that live check against a running instance.
+
 ## Code generation
 
 The registry is the source of truth for names. Regenerate the C++ constants Zeal
@@ -103,6 +129,12 @@ compiles against:
 ```bash
 ./generate.sh                          # writes ../NewZeal/Zeal/everquest_semconv.h
 WEAVER=/path/to/weaver ./generate.sh   # if weaver is not on PATH
+```
+
+The Rust server takes the same constants (plus `attribute_type()` for typed OTLP export):
+
+```bash
+./generate.sh rust ../wood-blend-aurora-lark/eqmacemu/src   # writes src/everquest_semconv.rs
 ```
 
 A mistyped attribute then fails to compile instead of silently splitting a timeseries.

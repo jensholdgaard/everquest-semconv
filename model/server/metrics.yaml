@@ -1,0 +1,50 @@
+# Metrics the Rust server (eqmacemu) emits about itself.
+groups:
+  - id: metric.everquest.script.missing_binding
+    type: metric
+    metric_name: everquest.script.missing_binding
+    stability: development
+    brief: Quest-script calls that reached a binding the server has not implemented.
+    instrument: counter
+    unit: "{call}"
+    attributes: []
+
+  - id: metric.everquest.login.attempts
+    type: metric
+    metric_name: everquest.login.attempts
+    stability: development
+    brief: Login attempts by outcome.
+    instrument: counter
+    unit: "{attempt}"
+    attributes:
+      - ref: everquest.login.result
+        requirement_level: required
+
+  - id: metric.everquest.character.created
+    type: metric
+    metric_name: everquest.character.created
+    stability: development
+    brief: Characters created on the server.
+    instrument: counter
+    unit: "{character}"
+    attributes: []
+
+  - id: metric.everquest.server.up
+    type: metric
+    metric_name: everquest.server.up
+    stability: development
+    brief: 1 while the server's in-process cluster is booted.
+    instrument: gauge
+    unit: "1"
+    attributes: []
+
+  - id: metric.everquest.zone.movement.updates
+    type: metric
+    metric_name: everquest.zone.movement.updates
+    stability: development
+    brief: NPC course changes announced to clients (leg starts, arrivals, drift corrections).
+    instrument: counter
+    unit: "{update}"
+    attributes:
+      - ref: everquest.zone.name
+        requirement_level: required
