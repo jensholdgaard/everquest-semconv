@@ -470,5 +470,5 @@ groups:
       - id: everquest.combat.damage.amount
         type: int
         stability: development
-        brief: Hit points one blow took; 0 is a miss.
+        brief: Hit points one blow took; 0 is a miss, -1 a block, -2 a parry, -3 a riposte, -4 a dodge (the client's Damage_Struct codes).
         examples: [0, 9, 42]
