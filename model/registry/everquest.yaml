@@ -467,3 +467,8 @@ groups:
         stability: development
         brief: Spawn points the content gate left empty when the zone booted.
         examples: [0, 12]
+      - id: everquest.combat.damage.amount
+        type: int
+        stability: development
+        brief: Hit points one blow took; 0 is a miss.
+        examples: [0, 9, 42]

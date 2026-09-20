@@ -77,6 +77,24 @@ groups:
       - ref: everquest.content.gated
         requirement_level: recommended
 
+  - id: event.everquest.zone.combat
+    type: event
+    name: everquest.zone.combat
+    stability: development
+    brief: One melee blow the zone resolved — who hit whom, how, for how much (0 is a miss).
+    attributes:
+      - ref: everquest.combat.source
+        requirement_level: required
+      - ref: everquest.combat.target
+        requirement_level: required
+      - ref: everquest.combat.damage.type
+        requirement_level: recommended
+      - ref: everquest.combat.damage.amount
+        requirement_level: required
+      - ref: everquest.spawn.id
+        requirement_level: recommended
+        brief: The spawn that was hit.
+
   - id: event.everquest.server.log
     type: event
     name: everquest.server.log
