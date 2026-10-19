@@ -387,6 +387,19 @@ groups:
         requirement_level: required
         brief: The entity id the character was given in the zone.
 
+  - id: event.everquest.zone.change
+    type: event
+    name: everquest.zone.change
+    stability: development
+    brief: >
+      A client asked to leave the zone (OP_ZoneChange) and was sent on or
+      refused; after a death the client asks for its bind zone itself.
+    attributes:
+      - ref: everquest.zone.name
+        requirement_level:
+          conditionally_required: when the request was accepted
+        brief: The zone the character leaves for.
+
   - id: event.everquest.zone.chat
     type: event
     name: everquest.zone.chat
