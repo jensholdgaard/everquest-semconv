@@ -49,3 +49,67 @@ groups:
         requirement_level: required
       - ref: everquest.character.name
         requirement_level: required
+
+  # Hit points as the client shows them (the HP bar's own labels), so buffs, gear and AAs are in.
+  # Three gauges after the shape of `hw.battery.charge` / `hw.battery.charge.limit` in the OTel
+  # hardware conventions: the amount, its known total, and - because a gauge only keeps the value
+  # at collection - the lowest point reached in between.
+  - id: metric.everquest.character.hp
+    type: metric
+    metric_name: everquest.character.hp
+    stability: development
+    brief: >
+      The character's current hit points, sampled when the SDK collects.
+    note: >
+      Negative while unconscious, as the client reports it. On its own this misses anything shorter
+      than the export interval: a raid boss can take a tank from full to dead between two samples.
+      Read it together with `everquest.character.hp.min`.
+    instrument: gauge
+    unit: "{hitpoint}"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.character.name
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+
+  - id: metric.everquest.character.hp.limit
+    type: metric
+    metric_name: everquest.character.hp.limit
+    stability: development
+    brief: >
+      The character's maximum hit points.
+    note: >
+      Moves when HP buffs land or fade, or gear changes, so the size of the pool a heal chain is
+      keeping topped up is visible next to the amount in it.
+    instrument: gauge
+    unit: "{hitpoint}"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.character.name
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
+
+  - id: metric.everquest.character.hp.min
+    type: metric
+    metric_name: everquest.character.hp.min
+    stability: development
+    brief: >
+      The lowest hit points the character reached since the previous collection.
+    note: >
+      Tracked on every game frame and reset to the current value after each collection, so a spike
+      between two samples still shows: a point near zero at a time `everquest.character.hp` reads
+      full is a near-death the heals caught. This is what makes a 5 s export interval usable against
+      a 1.1 s attack round.
+    instrument: gauge
+    unit: "{hitpoint}"
+    entity_associations:
+      - everquest.character
+    attributes:
+      - ref: everquest.character.name
+        requirement_level: required
+      - ref: everquest.zone.name
+        requirement_level: recommended
