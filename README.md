@@ -20,7 +20,7 @@ model/
   registry/entities.yaml      # the everquest.character entity
   metrics/combat.yaml         # everquest.combat.damage
   metrics/heal.yaml           # everquest.combat.heal
-  metrics/character.yaml      # everquest.character.attack / .haste
+  metrics/character.yaml      # everquest.character.attack / .haste / .stat / .hp / .hp.limit / .hp.min
   metrics/group.yaml          # everquest.group.member
   spans.yaml                  # zone session and fight spans
   server/events.yaml          # eqmacemu server events
